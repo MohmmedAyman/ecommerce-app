@@ -7,12 +7,8 @@ use App\Http\Requests\CreeateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
-use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
