@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreeateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-
+    use HttpResponses;
 
     public function createuser(CreeateUserRequest $request):JsonResponse{
         try{
@@ -24,16 +25,10 @@ class UserController extends Controller
             $data['is_admin']=0;
             $user = User::create($data);
 
-            return response()->json([
-                'status'=> true,
-                'message' => 'User Created Succesfully',
-                'user' => $user
-            ]);
+           return $this->success($user,'User Created Succesfully');
+           
         } catch(\Throwable $th){
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ],500);
+            return $this->erorr(null,$th->getMessage(),500);
         }
     }
 
@@ -41,61 +36,41 @@ class UserController extends Controller
         try {
             $data = $request->validated();
 
-            if(!$this->attempt($data)){
-                return response()->json([
-                    'stauts' => false,
-                    'errors' => ['Auth' => 'Wrong in Creadentials']
 
-                ],401);
+            if(!Auth::attempt(['email' => $data['email'], 'password' => $data['password']])){
+                return $this->erorr(null,'Wrong in Creadentials',401);
             }
 
             $user = User::where('email',$request->email)->first();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Successfully login',
-                'data' =>['user' => $user, 
-                'token' => $user->createToken('API Token')->plainTextToken
-            ],
-            ]);
+            return $this->success([
+                'user'=> $user,
+                'token'=> $user->createToken('API Token'.$user->name)->plainTextToken
+            ],'Successfully login');
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ],500);
+            return $this->erorr(null,$th->getMessage(),500);
         }
     }
 
     public function me(){
         try {
-            $user = auth()->user();
-            return response()->json([
-                'status' => true,
-                'message' => 'User Profile',
-                'data' => $user,
-            ]);
+            $user = Auth::user();
+            return $this->success($user,'User Profile');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ],500);
+            return $this->erorr(null,$th->getMessage(),500);
         }
         
     }
 
-    private function attempt ($credentials=[]){
-        try {
-            $user = User::where('email',$credentials['email'])->first();
-            if($user && Hash::check($credentials["password"],$user->password)){
-                return true;
-            }
-            else{
-                return false;
-            }
+    public function logout(){
+        try{
+            Auth::user()->currentAccessToken()->delete();
+    
+            return $this->success(['message'=>'you are now loggout']);
         } catch (\Throwable $th) {
-            throw $th;
+            return $this->erorr(null,$th->getMessage(),500);
         }
-        
     }
+
 }

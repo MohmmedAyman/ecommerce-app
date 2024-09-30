@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Maincategoryv2Controller;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,11 +19,13 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/user/register',[UserController::class,'createuser']);
 Route::post('/user/login',[UserController::class,'login']);
-Route::apiResource('maincategory',Maincategoryv2Controller::class);
-Route::apiResource('category',CategoryController::class);
 
 Route::group([
     'middleware' => 'auth:sanctum'
 ],function(){
+    Route::apiResource('maincategory',Maincategoryv2Controller::class);
+    Route::apiResource('category',CategoryController::class);
+    Route::apiResource('product',ProductController::class);
     Route::get('/userprofile',[UserController::class,'me']);
+    Route::post('/user/logout',[UserController::class,'logout']);
 });

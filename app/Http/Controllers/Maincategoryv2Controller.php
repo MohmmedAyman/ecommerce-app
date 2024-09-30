@@ -5,23 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Maincategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\McateRequest;
+use App\Traits\HttpResponses;
 use Exception;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Maincategoryv2Controller extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $maincategories = Maincategory::all();
-        return response()->json([
-            'status' => true,
-            'data' =>[
-                'Main Categories' => $maincategories
-            ],
+        return $this->success([
+            'Main Categories' => $maincategories
         ]);
     }
 
@@ -34,12 +33,9 @@ class Maincategoryv2Controller extends Controller
 
         $mcate = Maincategory::create($data);
 
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'Main Category' => $mcate
-            ]
-            ]);
+        return $this->success([
+            'Main Category' => $mcate
+        ],code:201);
     }
 
     /**
@@ -48,12 +44,9 @@ class Maincategoryv2Controller extends Controller
     public function show(Maincategory $maincategory)
     {
         try{
-            return response()->json([
-                'status' => true,
-                'data' => [
-                    'Main Category' => $maincategory
-                ]
-                ]);
+            return $this->success([
+                'Main Category' => $maincategory
+            ]);
         }catch(Exception $e){
             $response = response()->json([
                 'status' => false,
@@ -73,13 +66,9 @@ class Maincategoryv2Controller extends Controller
     {
         $data = $request->validated();
         $maincategory->update($data);
-        return response()->json([
-            'status' => true,
-            'data' => [
-                'Main Category' => $maincategory
-            ]
-            ]);
-
+        return $this->success([
+            'Main Category' => $maincategory
+        ]);
     }
 
     /**
@@ -88,8 +77,6 @@ class Maincategoryv2Controller extends Controller
     public function destroy(Maincategory $maincategory)
     {
         $maincategory->delete();
-        return response()->json([
-            'status' => true,
-        ]);
+        return $this->success(null,code:204);
     }
 }

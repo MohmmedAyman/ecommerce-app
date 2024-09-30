@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CateRequest;
 use App\Models\Category;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
@@ -15,7 +17,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return $this->json($categories);
+        return $this->success(['Category'=>$categories]);
     }
 
     /**
@@ -27,7 +29,7 @@ class CategoryController extends Controller
 
         $category = Category::create($data);
 
-        return $this->json($category);
+        return $this->success(['Category'=>$category]);
     }
 
     /**
@@ -35,7 +37,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return $this->json($category);
+        return $this->success(['Category'=>$category]);
     }
 
     /**
@@ -45,7 +47,7 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $category->update($data);
-        return $this->json($category);
+        return $this->success(['Category'=>$category]);
     }
 
     /**
@@ -55,21 +57,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return $this->json();
+        return $this->success(null,code:204);
     }
 
-    private function json($data =null){
-        if(!$data){
-            return response()->json([
-                'status' => true
-            ]);
-        }
-        return response()->json([
-            'status' => true,
-            'data' =>[
-                'Category' => $data
-            ]
-            ]);
-
-    }
 }

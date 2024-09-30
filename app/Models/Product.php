@@ -16,4 +16,12 @@ class Product extends Model
         'pro_maincategory',
         'pro_category',
     ];
+
+    public function mainCategory(){
+        return $this->belongsTo(Maincategory::class,'pro_maincategory');
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class,'pro_category');
+    }
 }
