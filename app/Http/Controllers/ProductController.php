@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Traits\HttpResponses;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ProductController extends Controller
+class ProductController extends Controller implements HasMiddleware
 {
     use HttpResponses;
+
+    public static function middleware(): array
+    {
+        return [
+            'auth:sanctum',
+            new Middleware(EnsureUserIsAdmin::class, except: ['index','show']),
+        ];
+    }
+
+    
     /**
      * Display a listing of the resource.
      */

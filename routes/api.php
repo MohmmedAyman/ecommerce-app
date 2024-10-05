@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Maincategoryv2Controller;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SocialiteController;
+use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/user/register',[UserController::class,'createuser']);
 Route::post('/user/login',[UserController::class,'login']);
+Route::post('/user/socialite/login',[SocialiteController::class,'login']);
 
 Route::group([
     'middleware' => 'auth:sanctum'

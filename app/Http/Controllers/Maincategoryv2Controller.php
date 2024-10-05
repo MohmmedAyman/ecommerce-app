@@ -2,25 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Models\Maincategory;
-use Illuminate\Http\Request;
 use App\Http\Requests\McateRequest;
 use App\Traits\HttpResponses;
 use Exception;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 
-class Maincategoryv2Controller extends Controller
+class Maincategoryv2Controller extends Controller implements HasMiddleware
 {
     use HttpResponses;
+
+    public static function middleware(): array
+    {
+        return [
+            'auth:sanctum',
+            new Middleware(EnsureUserIsAdmin::class, except: ['index','show']),
+        ];
+    }
+
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $maincategories = Maincategory::all();
         return $this->success([
-            'Main Categories' => $maincategories
+            'Main Categories' => $maincategories,
         ]);
     }
 

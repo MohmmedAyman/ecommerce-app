@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Requests\CateRequest;
 use App\Models\Category;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements HasMiddleware
 {
     use HttpResponses;
+
+    public static function middleware(): array
+    {
+        return [
+            'auth:sanctum',
+            new Middleware(EnsureUserIsAdmin::class, except: ['index','show']),
+        ];
+    }
+
+
     /**
      * Display a listing of the resource.
      */
