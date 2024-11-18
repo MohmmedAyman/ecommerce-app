@@ -1,76 +1,75 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Middleware\EnsureUserIsAdmin;
-use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Http\Resources\ProductResource;
+use App\Http\Requests\CateRequest;
+use App\Models\Category;
 use App\Traits\HttpResponses;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class ProductController extends Controller implements HasMiddleware
+class CategoryController implements HasMiddleware
 {
     use HttpResponses;
 
     public static function middleware(): array
     {
         return [
-            'auth:sanctum',
+            // 'auth:sanctum',
             new Middleware(EnsureUserIsAdmin::class, except: ['index','show']),
         ];
     }
 
-    
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->success(ProductResource::collection(Product::all()));
+        $categories = Category::all();
+
+        return $this->success(['Category'=>$categories]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(CateRequest $request)
     {
         $data = $request->validated();
 
-        $pro = Product::create($data);
-        return $this->success(new ProductResource($pro));
+        $category = Category::create($data);
+
+        return $this->success(['Category'=>$category]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Category $category)
     {
-        return $this->success(new ProductResource($product));
+        return $this->success(['Category'=>$category]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(CateRequest $request, Category $category)
     {
         $data = $request->validated();
-
-        $product->update($data);
-
-        return $this->success(new ProductResource($product));
+        $category->update($data);
+        return $this->success(['Category'=>$category]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Category $category)
     {
-        $product->delete();
+        $category->delete();
+
         return $this->success(null,code:204);
     }
 
-  
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Models\Maincategory;
@@ -13,7 +13,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-class Maincategoryv2Controller extends Controller implements HasMiddleware
+class Maincategoryv2Controller  implements HasMiddleware
 {
     use HttpResponses;
 

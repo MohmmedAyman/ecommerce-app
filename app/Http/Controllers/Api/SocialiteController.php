@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\LoginSRequest;
 use App\Models\Provider;
@@ -9,7 +9,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
-class SocialiteController extends Controller
+class SocialiteController 
 {
     use HttpResponses;
     public function login(LoginSRequest $loginsrequest){
