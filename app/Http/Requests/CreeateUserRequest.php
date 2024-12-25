@@ -30,7 +30,11 @@ class CreeateUserRequest extends FormRequest
         return [
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
+                'is_admin' => 'required|boolean',
                 'password' => 'required|min:8',
+                "brand_name" => "required_if:is_admin,true|prohibited_unless:is_admin,true|string|max:255",
+                'address' => 'required_if:is_admin,true|prohibited_unless:is_admin,true|string|max:255',
+                "logo_path" => "required_if:is_admin,true|prohibited_unless:is_admin,true|mimes:jpeg,png,jpg,gif,svg|max:2048",
         ];
     }
 
