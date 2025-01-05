@@ -50,4 +50,8 @@ class User extends Authenticatable
     public function provider(){
         return $this->hasMany(Provider::class,'user_id','id');
     }
+
+    public function brand(){
+        return $this->hasOne(Brand::class,'user_id','id');
+    }
 }

@@ -24,10 +24,10 @@ class UserController extends Controller
                 $data_user = $request->only(['name','email','password','is_admin']);
                 $user = User::create($data_user);
 
-                $data_user["is_admin"]? $data_brand = $request->only(['name','address','logo_path']):$data_brand = null;
+                $data_user["is_admin"]? $data_brand = $request->only(['brand_name','address','logo_path']):$data_brand = null;
                 $logo_path = $data_brand['logo_path']?$data_brand['logo_path']->store('logs','public'):null;
                 $data_brand['logo_path'] = $logo_path;
-                // dd($user->id);
+
                 $data_brand['user_id'] = $user->id;
                 $brand = Brand::create($data_brand);
                 return $this->success(new BrandRresource($brand),'User and Brand Created Succesfully');

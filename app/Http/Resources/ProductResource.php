@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
                 'price' => $this->pro_price,
                 'productMainCategory' => $this->pro_maincategory,
                 'productCategory' => $this->pro_category,
+                'brandId' => $this->brand_id,
             ],
             'mainCategroy' => [
                 'id' => $this->mainCategory->id,
@@ -31,6 +32,10 @@ class ProductResource extends JsonResource
                 'id' => $this->category->id,
                 'Name' => $this->category->cate_name
             ],
+            'brand' => [
+                'id' => $this->brand->id,
+                'Name' => $this->brand->name
+            ]
         ];
     }
 }

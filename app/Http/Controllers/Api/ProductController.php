@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Traits\HttpResponses;
 use Illuminate\Routing\Controller;
+use App\Http\Resources\ProductCollection;
 
 
 class ProductController extends Controller 
@@ -25,7 +26,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return $this->success(ProductResource::collection(Product::all()));
+        return $this->success(new ProductCollection(Product::all()->keyBy->id));
     }
 
     /**
@@ -34,7 +35,7 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $data = $request->validated();
-
+        $data['brand_id'] = auth()->user()->brand->id;
         $pro = Product::create($data);
         return $this->success(new ProductResource($pro));
     }
@@ -52,9 +53,12 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        if($result = $this->authorize($product->brand->user_id)){
+            return $result;
+        }
         $data = $request->validated();
 
-        $product->update($data);
+        $product->update(array_filter($data));
 
         return $this->success(new ProductResource($product));
     }
@@ -64,6 +68,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if($result = $this->authorize($product->brand->user_id)){
+            return $result;
+        }
         $product->delete();
         return $this->success(null,code:204);
     }

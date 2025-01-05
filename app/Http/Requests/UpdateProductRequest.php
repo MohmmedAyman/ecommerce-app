@@ -22,11 +22,11 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pro_name' => 'required',
-            'pro_description' => 'required',
-            'pro_price' => 'required',
-            'pro_maincategory' => 'required',
-            'pro_category' => 'required',
+            'pro_name'=> 'string|max:255',
+            'pro_description' => 'string', 
+            'pro_price' => 'numeric',
+            'pro_maincategory' => 'integer|exists:maincategories,id',
+            'pro_category' => 'integer|exists:categories,id',
         ];
     }
 }

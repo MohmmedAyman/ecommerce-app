@@ -15,6 +15,7 @@ class Product extends Model
         'pro_price',
         'pro_maincategory',
         'pro_category',
+        'brand_id'
     ];
 
     public function mainCategory(){
@@ -23,5 +24,9 @@ class Product extends Model
 
     public function category(){
         return $this->belongsTo(Category::class,'pro_category');
+    }
+
+    public function brand(){
+        return $this->belongsTo(Brand::class);
     }
 }
